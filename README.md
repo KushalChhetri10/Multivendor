@@ -1,1 +1,1 @@
-## Multi vendor application
+Multi-Vendor Application
