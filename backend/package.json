@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "This is the backend for our multi vendor application",
   "main": "server.js",
-  "author": "Pratap Sharma <sharma.pratap22@gmail.com>",
+  "author": "Kushal Budhathoki Chhetri <kushalxetri10@gmail.com>",
   "license": "MIT",
   "scripts": {
     "dev": "nodemon server.js",
