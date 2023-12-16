@@ -6,6 +6,7 @@ interface LoginData {
   name?: string;
   email: string;
   password: string;
+  rememberMe?: boolean;
 }
 
 export const loginAsync = createAsyncThunk(
@@ -13,6 +14,23 @@ export const loginAsync = createAsyncThunk(
   async (loginData: LoginData) => {
     try {
       const response = await lwpAxios.post("/user/login", loginData, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        throw new Error("Login failed:" + error.message);
+      } else {
+        return Promise.reject();
+      }
+    }
+  }
+);
+export const createUserAsync = createAsyncThunk(
+  "user/create",
+  async (loginData: LoginData) => {
+    try {
+      const response = await lwpAxios.post("/user/create", loginData, {
         withCredentials: true,
       });
       return response.data;

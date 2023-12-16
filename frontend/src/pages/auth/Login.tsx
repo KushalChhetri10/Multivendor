@@ -1,27 +1,30 @@
 import { useState } from "react";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import lwpStyles from "../../styles";
-import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../redux/store";
-import { loginAsync } from "../../redux/actions/user";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import lwpStyles from "../../styles";
+import { loginAsync } from "../../redux/actions/user";
+import { AppDispatch } from "../../redux/store";
 import { AxiosError } from "axios";
 
 const Login = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
-  const [remember, setRemember] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
-      await dispatch(loginAsync({ email, password }));
+      await dispatch(loginAsync({ email, password, rememberMe }));
+      toast.success("Login Success!");
+      navigate("/");
     } catch (error) {
       const axiosError = error as AxiosError;
-      console.log("Catch", error);
+      toast.error(axiosError.message || "An error occurred");
     }
   };
 
@@ -89,6 +92,10 @@ const Login = () => {
             <div className={`${lwpStyles.noramlFlex} justify-between`}>
               <div className={`${lwpStyles.noramlFlex}`}>
                 <input
+                  checked={rememberMe}
+                  onChange={(e) => {
+                    setRememberMe(e.target.checked);
+                  }}
                   type="checkbox"
                   name="remember-me"
                   id="remember-me"
@@ -115,7 +122,7 @@ const Login = () => {
                 type="submit"
                 className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
               >
-                Submit
+                Login
               </button>
             </div>
             <div className={`${lwpStyles.noramlFlex} w-full`}>

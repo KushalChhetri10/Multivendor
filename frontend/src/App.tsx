@@ -5,7 +5,7 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
-import Activate from "./pages/ActivationPage";
+import ActivationPage from "./pages/ActivationPage";
 
 function App() {
   return (
@@ -13,8 +13,11 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/actiavtion/:activationToken" element={<Activate />} />
-        <Route path="/" element={<Home />} />
+        <Route
+          path="/actiavtion/:activationToken"
+          element={<ActivationPage />}
+        />
+        <Route path="/" index element={<Home />} />
       </Routes>
       <ToastContainer
         position="bottom-right"
