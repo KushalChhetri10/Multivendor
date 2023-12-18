@@ -58,3 +58,20 @@ export const activateUserAsync = createAsyncThunk(
     }
   }
 );
+export const autologinAsync = createAsyncThunk(
+  "user/autologin",
+  async (loginData: LoginData) => {
+    try {
+      const response = await lwpAxios.post("/user/login", {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        throw new Error("Login failed:" + error.response?.data.message);
+      } else {
+        return Promise.reject();
+      }
+    }
+  }
+);

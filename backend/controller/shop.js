@@ -15,7 +15,7 @@ shopRouter.get("/", (req, res) => {
 shopRouter.post(
   "/create",
   catchAsyncErrors(async (req, res, next) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, address, zipcode, phonenumber } = req.body;
 
     if (!name) {
       return next(new LWPError("Name cannot be empty", 400));
@@ -23,6 +23,15 @@ shopRouter.post(
 
     if (!password) {
       return next(new LWPError("Password cannot be empty", 400));
+    }
+    if (!address) {
+      return next(new LWPError("Address cannot be empty", 400));
+    }
+    if (!zipcode) {
+      return next(new LWPError("Zipcode cannot be empty", 400));
+    }
+    if (!phonenumber) {
+      return next(new LWPError("Phonenumber cannot be empty", 400));
     }
 
     // Email validation
@@ -38,9 +47,16 @@ shopRouter.post(
       );
     }
 
-    const activationToken = createActivationToken({ name, email, password });
+    const activationToken = createActivationToken({
+      name,
+      email,
+      password,
+      zipcode,
+      phonenumber,
+      address,
+    });
     // TODO change the port
-    const activationUrl = `http://localhost:8080/api/v1/shop/activation/?token=${activationToken}`;
+    const activationUrl = `http://localhost:5173/selleractivation/${activationToken}`;
     await sendMail({
       email: email,
       subject: "Please Activate Your Account",
@@ -53,15 +69,13 @@ shopRouter.post(
 );
 
 shopRouter.get(
-  "/activation",
+  "/activation/:token",
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const { token } = req.query;
+      const { token } = req.params;
 
-      const { name, email, password } = jwt.verify(
-        token,
-        process.env.JWT_SECRET
-      );
+      const { name, email, password, address, zipcode, phonenumber } =
+        jwt.verify(token, process.env.JWT_SECRET);
 
       const allShops = await Shop.find({ email });
 
@@ -72,7 +86,14 @@ shopRouter.get(
         );
       }
 
-      const shopCreated = await Shop.create({ name, email, password });
+      const shopCreated = await Shop.create({
+        name,
+        email,
+        password,
+        address,
+        zipcode,
+        phonenumber,
+      });
       sendToken(shopCreated, 201, res, "shop_token");
     } catch (err) {
       return next(new LWPError(err, 500));

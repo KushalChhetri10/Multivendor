@@ -17,6 +17,18 @@ const shopSchema = new mongoose.Schema({
     minLength: [4, "Password should be greater than 4 characters"],
     select: false,
   },
+  address: {
+    type: String,
+    required: [true, "Please enter your address!"],
+  },
+  zipcode: {
+    type: String,
+    required: [true, "Please enter your zipcode!"],
+  },
+  phonenumber: {
+    type: String,
+    required: [true, "Please enter your phonenumber!"],
+  },
   role: {
     type: String,
     default: "seller",
