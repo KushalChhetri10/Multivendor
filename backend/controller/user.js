@@ -40,7 +40,7 @@ userRouter.post(
 
     const activationToken = createActivationToken({ name, email, password });
     // TODO change the port
-    const activationUrl = `http://localhost:5173/activation/?token=${activationToken}`;
+    const activationUrl = `http://localhost:5173/activation/${activationToken}`;
     await sendMail({
       email: email,
       subject: "Please Activate Your Account",
@@ -53,10 +53,10 @@ userRouter.post(
 );
 
 userRouter.get(
-  "/activation",
+  "/activation/:token",
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const { token } = req.query;
+      const { token } = req.params;
 
       const { name, email, password } = jwt.verify(
         token,

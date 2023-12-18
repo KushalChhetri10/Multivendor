@@ -3,9 +3,9 @@ import { useDispatch } from "react-redux";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import lwpStyles from "../../styles";
-import { loginAsync } from "../../redux/actions/user";
-import { AppDispatch } from "../../redux/store";
+import lwpStyles from "../../../styles";
+import { loginAsync } from "../../../redux/actions/user";
+import { AppDispatch } from "../../../redux/store";
 import { AxiosError } from "axios";
 
 const Login = () => {

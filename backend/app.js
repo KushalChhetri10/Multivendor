@@ -5,7 +5,7 @@ const errorMiddleware = require("./middleware/error");
 const app = express();
 
 const appRouter = require("./controller");
-const requestMiddleware = require("./middleware/requestLogger");
+const requestMiddleware = require("./middleware/requestMiddleware");
 
 app.use(
   cors({
