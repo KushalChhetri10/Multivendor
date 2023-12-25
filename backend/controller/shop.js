@@ -5,17 +5,35 @@ const Shop = require("../model/Shop");
 const LWPError = require("../utils/error");
 const sendToken = require("../utils/jwtToken");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
+const { isSeller } = require("../middleware/auth");
 
 const shopRouter = express.Router();
 
-shopRouter.get("/", (req, res) => {
-  res.send("shopRouter");
-});
+shopRouter.get(
+  "/",
+  isSeller,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const shop = await Shop.findById(req.shop._id);
+
+      if (!shop) {
+        return next(new ErrorHandler("Shop doesn't exists", 400));
+      }
+
+      res.status(200).json({
+        success: true,
+        user: shop,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
 
 shopRouter.post(
   "/create",
   catchAsyncErrors(async (req, res, next) => {
-    const { name, email, password, address, zipcode, phonenumber } = req.body;
+    const { name, email, password, phoneNumber, address, zipCode } = req.body;
 
     if (!name) {
       return next(new LWPError("Name cannot be empty", 400));
@@ -24,14 +42,18 @@ shopRouter.post(
     if (!password) {
       return next(new LWPError("Password cannot be empty", 400));
     }
+
+    if (!email) {
+      return next(new LWPError("Email cannot be empty", 400));
+    }
     if (!address) {
       return next(new LWPError("Address cannot be empty", 400));
     }
-    if (!zipcode) {
-      return next(new LWPError("Zipcode cannot be empty", 400));
+    if (!phoneNumber) {
+      return next(new LWPError("PhoneNumber cannot be empty", 400));
     }
-    if (!phonenumber) {
-      return next(new LWPError("Phonenumber cannot be empty", 400));
+    if (!zipCode) {
+      return next(new LWPError("ZipCode cannot be empty", 400));
     }
 
     // Email validation
@@ -51,12 +73,11 @@ shopRouter.post(
       name,
       email,
       password,
-      zipcode,
-      phonenumber,
+      phoneNumber,
       address,
+      zipCode,
     });
-    // TODO change the port
-    const activationUrl = `http://localhost:5173/selleractivation/${activationToken}`;
+    const activationUrl = `http://localhost:5173/shop-activation/${activationToken}`;
     await sendMail({
       email: email,
       subject: "Please Activate Your Account",
@@ -74,7 +95,7 @@ shopRouter.get(
     try {
       const { token } = req.params;
 
-      const { name, email, password, address, zipcode, phonenumber } =
+      const { name, email, password, phoneNumber, address, zipCode } =
         jwt.verify(token, process.env.JWT_SECRET);
 
       const allShops = await Shop.find({ email });
@@ -90,9 +111,9 @@ shopRouter.get(
         name,
         email,
         password,
+        phoneNumber,
         address,
-        zipcode,
-        phonenumber,
+        zipCode,
       });
       sendToken(shopCreated, 201, res, "shop_token");
     } catch (err) {

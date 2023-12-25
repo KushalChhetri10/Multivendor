@@ -7,12 +7,12 @@ interface ShopLoginData {
   email: string;
   password: string;
   address?: string;
-  phonenumber?: string;
-  zipcode?: string;
+  phoneNumber?: string;
+  zipCode?: string;
   rememberMe?: boolean;
 }
 
-export const loginSellerAsync = createAsyncThunk(
+export const shopLoginAsync = createAsyncThunk(
   "shop/login",
   async (loginData: ShopLoginData) => {
     try {
@@ -22,14 +22,15 @@ export const loginSellerAsync = createAsyncThunk(
       return response.data;
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        throw new Error("Login failed:" + error.response?.data.message);
+        throw new Error("Login failed: " + error.response?.data.message);
       } else {
         return Promise.reject();
       }
     }
   }
 );
-export const createSellerAsync = createAsyncThunk(
+
+export const createShopAsync = createAsyncThunk(
   "shop/create",
   async (loginData: ShopLoginData) => {
     try {
@@ -39,22 +40,41 @@ export const createSellerAsync = createAsyncThunk(
       return response.data;
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        throw new Error("Login failed:" + error.response?.data.message);
+        throw new Error("Create failed: " + error.response?.data.message);
       } else {
         return Promise.reject();
       }
     }
   }
 );
-export const activateSellerAsync = createAsyncThunk(
-  "shop/activation",
+
+export const activateShopAsync = createAsyncThunk(
+  "shop/active",
   async (token: string) => {
     try {
       const response = await lwpAxios.get(`/shop/activation/${token}`);
       return response.data;
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        throw new Error("Login failed:" + error.response?.data.message);
+        throw new Error("Login failed: " + error.response?.data.message);
+      } else {
+        return Promise.reject();
+      }
+    }
+  }
+);
+
+export const shopAutoLoginAsync = createAsyncThunk(
+  "shop/autoLogin",
+  async () => {
+    try {
+      const response = await lwpAxios.get("/shop", {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        throw new Error("Login failed: " + error.response?.data.message);
       } else {
         return Promise.reject();
       }

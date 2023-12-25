@@ -1,5 +1,6 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const { sendMail } = require("../utils/mailer");
 const UserModel = require("../model/User");
 const LWPError = require("../utils/error");
@@ -14,10 +15,10 @@ userRouter.get(
   isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const user = await User.findById(req.user._id);
+      const user = await UserModel.findById(req.user._id);
 
       if (!user) {
-        return next(new ErrorHandler("User doesn't exists", 400));
+        return next(new LWPError("User doesn't exists", 400));
       }
 
       res.status(200).json({
@@ -25,7 +26,7 @@ userRouter.get(
         user,
       });
     } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
+      return next(new LWPError(error.message, 500));
     }
   })
 );
@@ -56,8 +57,19 @@ userRouter.post(
       );
     }
 
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Save the user with the hashed password
+    const newUser = new UserModel({
+      name,
+      email,
+      password: hashedPassword,
+    });
+
+    await newUser.save();
+
     const activationToken = createActivationToken({ name, email, password });
-    // TODO change the port
     const activationUrl = `http://localhost:5173/activation/${activationToken}`;
     await sendMail({
       email: email,

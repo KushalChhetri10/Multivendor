@@ -18,7 +18,7 @@ const ActivationPage = () => {
         try {
           await dispatch(activateUserAsync(token));
           toast.success("User Successfully Activated!");
-          navigate("/");
+          navigate("/login");
         } catch (error) {
           const axiosError = error as AxiosError;
           setError("An error occurred while activating user");

@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import lwpStyles from "../../../styles";
-import { loginSellerAsync } from "../../../redux/actions/seller";
+import { shopLoginAsync } from "../../../redux/actions/shop";
+import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
+import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 
 const ShopLogin = () => {
@@ -19,9 +19,9 @@ const ShopLogin = () => {
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
-      await dispatch(loginSellerAsync({ email, password, rememberMe }));
+      await dispatch(shopLoginAsync({ email, password, rememberMe }));
       toast.success("Login Success!");
-      navigate("/");
+      navigate("/shop-dashboard");
     } catch (error) {
       const axiosError = error as AxiosError;
       toast.error(axiosError.message || "An error occurred");
@@ -32,7 +32,7 @@ const ShopLogin = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Login to your account
+          Login to your Shop
         </h2>
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -89,7 +89,6 @@ const ShopLogin = () => {
                 )}
               </div>
             </div>
-
             <div className={`${lwpStyles.noramlFlex} justify-between`}>
               <div className={`${lwpStyles.noramlFlex}`}>
                 <input
@@ -127,9 +126,9 @@ const ShopLogin = () => {
               </button>
             </div>
             <div className={`${lwpStyles.noramlFlex} w-full`}>
-              <h4>Not have any account?</h4>
-              <Link to="/shopregister" className="text-blue-600 pl-2">
-                ShopRegister
+              <h4>Not have an account?</h4>
+              <Link to="/shop-register" className="text-blue-600 pl-2">
+                Register Shop
               </Link>
             </div>
           </form>

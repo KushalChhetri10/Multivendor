@@ -19,13 +19,29 @@ export const loginAsync = createAsyncThunk(
       return response.data;
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        throw new Error("Login failed:" + error.response?.data.message);
+        throw new Error("Login failed: " + error.response?.data.message);
       } else {
         return Promise.reject();
       }
     }
   }
 );
+
+export const autoLoginAsync = createAsyncThunk("user/autoLogin", async () => {
+  try {
+    const response = await lwpAxios.get("/user", {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+      throw new Error("Login failed: " + error.response?.data.message);
+    } else {
+      return Promise.reject();
+    }
+  }
+});
+
 export const createUserAsync = createAsyncThunk(
   "user/create",
   async (loginData: LoginData) => {
@@ -36,39 +52,23 @@ export const createUserAsync = createAsyncThunk(
       return response.data;
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        throw new Error("Login failed:" + error.response?.data.message);
+        throw new Error("Create failed: " + error.response?.data.message);
       } else {
         return Promise.reject();
       }
     }
   }
 );
+
 export const activateUserAsync = createAsyncThunk(
-  "user/activation",
+  "user/active",
   async (token: string) => {
     try {
       const response = await lwpAxios.get(`/user/activation/${token}`);
       return response.data;
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        throw new Error("Login failed:" + error.response?.data.message);
-      } else {
-        return Promise.reject();
-      }
-    }
-  }
-);
-export const autologinAsync = createAsyncThunk(
-  "user/autologin",
-  async (loginData: LoginData) => {
-    try {
-      const response = await lwpAxios.post("/user/login", {
-        withCredentials: true,
-      });
-      return response.data;
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        throw new Error("Login failed:" + error.response?.data.message);
+        throw new Error("Login failed: " + error.response?.data.message);
       } else {
         return Promise.reject();
       }

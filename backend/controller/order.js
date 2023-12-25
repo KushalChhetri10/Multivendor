@@ -9,7 +9,8 @@ orderRouter.post(
   "/",
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const { cart, shippingAddress, userId, totalPrice, paymentInfo } = req.body;
+      const { cart, shippingAddress, userId, totalPrice, paymentInfo } =
+        req.body;
 
       //   group cart items by shopId
       const shopItemsMap = new Map();
@@ -50,7 +51,7 @@ orderRouter.get(
   "/user/:userId",
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const orders = await Order.find({ "userId": req.params.userId }).sort({
+      const orders = await Order.find({ userId: req.params.userId }).sort({
         createdAt: -1,
       });
 

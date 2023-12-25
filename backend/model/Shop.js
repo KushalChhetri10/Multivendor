@@ -11,23 +11,23 @@ const shopSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please enter your email!"],
   },
-  password: {
+  phoneNumber: {
     type: String,
-    required: [true, "Please enter your password"],
-    minLength: [4, "Password should be greater than 4 characters"],
-    select: false,
+    required: [true, "Please enter your phoneNumber!"],
   },
   address: {
     type: String,
     required: [true, "Please enter your address!"],
   },
-  zipcode: {
+  zipCode: {
     type: String,
-    required: [true, "Please enter your zipcode!"],
+    required: [true, "Please enter your zipCode!"],
   },
-  phonenumber: {
+  password: {
     type: String,
-    required: [true, "Please enter your phonenumber!"],
+    required: [true, "Please enter your password"],
+    minLength: [4, "Password should be greater than 4 characters"],
+    select: false,
   },
   role: {
     type: String,

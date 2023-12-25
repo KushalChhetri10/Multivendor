@@ -4,7 +4,7 @@ const cors = require("cors");
 const errorMiddleware = require("./middleware/error");
 const app = express();
 
-const appRouter = require("./controller");
+const appRouter = require("./controller/index");
 const requestMiddleware = require("./middleware/requestMiddleware");
 
 app.use(
