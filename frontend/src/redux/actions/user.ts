@@ -10,7 +10,7 @@ interface LoginData {
 }
 
 export const loginAsync = createAsyncThunk(
-  "user/login",
+  "user/login", // name of the action
   async (loginData: LoginData) => {
     try {
       const response = await lwpAxios.post("/user/login", loginData, {
