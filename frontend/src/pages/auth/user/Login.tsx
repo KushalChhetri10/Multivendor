@@ -1,44 +1,49 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import lwpStyles from "../../../styles";
 import { loginAsync } from "../../../redux/actions/user";
 import { AppDispatch, LWPState } from "../../../redux/store";
 import { AxiosError } from "axios";
+import Loader from "../../../components/Loader";
 
 const Login = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const { isAuthenticated, user } = useSelector(
+  const { isAuthenticated, user, loading } = useSelector(
     (state: LWPState) => state.user
   );
+  const from = location.state?.from?.pathname || "/";
 
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
   useEffect(() => {
-    console.log("I am here");
     if (isAuthenticated && user) {
-      console.log("I am here inside");
-      navigate("/");
+      navigate(from);
     }
-  }, [isAuthenticated, user, navigate]);
+  }, [from, isAuthenticated, user, navigate]);
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
       await dispatch(loginAsync({ email, password, rememberMe }));
       toast.success("Login Success!");
-      navigate("/");
+      navigate(from);
     } catch (error) {
       const axiosError = error as AxiosError;
       toast.error(axiosError.message || "An error occurred");
     }
   };
+
+  if (loading === "pending") {
+    return <Loader />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">

@@ -2,11 +2,13 @@ const express = require("express");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const LWPError = require("../utils/error");
 const Order = require("../model/Order");
+const { isAuthenticated } = require("../middleware/auth");
 
 const orderRouter = express.Router();
 
 orderRouter.post(
   "/",
+  isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
     try {
       const { cart, shippingAddress, userId, totalPrice, paymentInfo } =
@@ -20,6 +22,7 @@ orderRouter.post(
         if (!shopItemsMap.has(shopId)) {
           shopItemsMap.set(shopId, []);
         }
+        item.productId = item._id;
         shopItemsMap.get(shopId).push(item);
       }
 
