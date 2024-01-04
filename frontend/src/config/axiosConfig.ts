@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 
 const lwpAxios: AxiosInstance = axios.create({
-  baseURL: "http://localhost:8080/api/v1",
+  baseURL: import.meta.env.VITE_BACKEND_URL,
   timeout: 5000,
 });
 
